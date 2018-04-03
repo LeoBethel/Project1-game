@@ -1,0 +1,13 @@
+img,.col-sm-2{
+  width:100px;
+  height:100px;
+}
+
+.col-sm-2{
+  border: 1px solid black;
+  padding: 2px;
+}
+.rotated-image {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
