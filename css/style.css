@@ -5,9 +5,22 @@ img,.col-sm-2{
 
 .col-sm-2{
   border: 1px solid black;
-  padding: 2px;
+  padding: 1px;
+}/*
+#col0-row1{
+  transform: rotate(0deg);
 }
-.rotated-image {
-  -webkit-transform: rotate(90deg);
-          transform: rotate(90deg);
+#col1-row1{
+  transform: rotate(0deg);
+}
+#col1-row2{
+  transform: rotate(0deg);
+}*/
+
+.my-Container{
+  margin : 0 auto; 
+  width: 600px;
+}
+.row {
+  background-color : blue;
 }
