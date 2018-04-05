@@ -24,3 +24,6 @@ img,.col-sm-2{
 .row {
   background-color : blue;
 }
+.btn-checkCircuit{
+  float : right;
+}

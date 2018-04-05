@@ -87,12 +87,10 @@ $(".col-sm-2").on('click',function(){
     console.log(pathTrue(dir1, dir2))
   }
   else
-
-    console.log (checkConnexion (myGrid));
-  
+    console.log ("Pas d'image");  
 });
  var  tokenDirection ;
- 
+// ******************************************************************************************************************* 
 function splitId(id){
   var idColRemove = id.split("col");
   var newId = idColRemove[0] + idColRemove[1];
@@ -101,15 +99,15 @@ function splitId(id){
   var newIdSplit = newId.split('-');
   return newIdSplit;
 }
-
+// direction : ip - right - down - left
 var myGrid = [
                   [{  name : 'Battery plus',
                       angle : 0,
-                      dir : [true,false,true,false],
-                      isCheck : false}                      ,'',            '',         '',         ''],
+                      dir : [true,false,false,false],
+                      isCheck : false}              ,'','','',''],
                   [{  name : 'Left-Down pipe',
                       angle : 0,
-                      dir : [true,true,false,false],
+                      dir : [false,false,true,true],
                       isCheck : false},
                    { name : 'Straight pipe',
                       angle : 0,
@@ -122,36 +120,140 @@ var myGrid = [
                   { name : 'Battery minus',
                       angle : 0,
                       dir : [false,false,false,true],
-                      isCheck : false},                                                                  ''],
-                  ['',                                      '',             '',         '',              ''],           
-                  ['',                                      '',             '',         '',              ''], 
-                  ['',                                      '',             '',         '',              '']
+                      isCheck : false},                           ''],
+                  ['',                               '',  '', '', ''],           
+                  ['',                               '',  '', '', ''], 
+                  ['',                               '',  '', '', '']
               ]
 
-function checkConnexion(gridArr){
-    var lastToken = [];
-    var newToken = [];
-    var nexTokenAhead = [];
-    var nexTokenAbove = [];
-  for (var i = gridArr.length - 1; i >= 0 ; i--){      
+$('#btn-checkCircuit').on('click',function () {
+  manageConnexion(myGrid);
+})
+function manageConnexion(gridArr){
+   
+  var actTkObj = {},  uTkObj = {}, rTkObj ={}, dTkObj = {}; lTkObj = {} ;
+  var actuelTokenInd = [], uTokenInd = [], rTokenInd = [], dTokenInd =[], lTokenInd = [];
+  // -----------------------------------------------------------------------------------------------------------------
+  // looking for Battery minus token in the grid 
+  var findTkBm = false;
+    for (var i = gridArr.length - 1; i >= 0 ; i--){      
       for (var j = gridArr.length -1 ; j >= 0 ; j --){
-          if (gridArr[i][j] != '') {
-            lastToken = gridArr[i][j].push(); 
-            nexTokenAhead = gridArr[i][j-1].push();
-            nexTokenAbove = gridArr[i-1][j].push();
-            if (nexTokenAhead != '') {
-              if ( lastToken.dir[3] === true && nexTokenAhead.dir[1] === true ){  // compare if  connexion left = right ;
-                
-                continue;
-              }
-              else{
-                return false;
-              }
-            }      
+        var myGridArr = gridArr[i][j];
+          if ( myGridArr != '' && myGridArr.name === "Battery minus") {
+            findTkBm = true;            
+            break;
           }
       }
+      if (findTkBm) {
+          break;
+      }
+    }
+  // if not in grid then circuit false
+  if (!findTkBm){
+    return false;
+  }   
+  
+  // -----------------------------------------------------------------------------------------------------------------
+  // looking for Battery plus token in the grid 
+  var findTkBp = false;
+  for (var i = gridArr.length - 1; i >= 0 ; i--){      
+    for (var j = gridArr.length -1 ; j >= 0 ; j --){
+      var myGridArr1 = gridArr[i][j];
+        if ( myGridArr1 != '' && myGridArr1.name === "Battery plus") {
+          findTkBp = true;
+            break;
+        }
+    }
+    if (findTkBp) {
+        break;
+    }
   }
+   // if not in grid then circuit false
+   if (!findTkBp){
+      return false;
+    }
+  
+  // -----------------------------------------------------------------------------------------------------------------
+  var row = 0, col = 0;  
+  // check side by side if connexion is true
+        for (var i = gridArr.length - 1; i >= 0 ; i--){      
+          for (var j = gridArr.length -1 ; j >= 0 ; j --){
+            var myGridArr = gridArr[i][j];
+              if ( myGridArr != '' && myGridArr.name === "Battery minus") {
+                actuelTokenInd = getIndexTruePositionFromToken (myGridArr.dir) ;
+                actTkObj = myGridArr
+                uTokenInd = getIndexTruePositionFromToken(gridArr[i-1][j].dir);    // above token
+                uTkObj = gridArr[i-1][j];
+                rTokenInd = getIndexTruePositionFromToken(gridArr[i][j+1].dir);    // right token
+                rTkObj = gridArr[i][j+1];
+                dTokenInd = getIndexTruePositionFromToken(gridArr[i+1][j].dir);    // down token
+                dTkObj = gridArr[i+1][j];
+                lTokenInd = getIndexTruePositionFromToken(gridArr[i][j-1].dir);     // left token
+                lTkObj = gridArr[i][j-1];
+                var checkCon = false;
+               if (uTokenInd.length > 0) {
+                  checkCon = checkConnexion (actuelTokenInd, uTokenInd);
+                  if (checkCon === true ){
+                    actionCheckConnexionTrue( actTkObj,i,j);
+                  }              
+                }
+                if (checkCon === false && rTokenInd.length > 0){
+                  checkCon = checkConnexion (actuelTokenInd, rTokenInd);
+                  if (checkCon === true ){
+                    actionCheckConnexionTrue( actTkObj,i,j);
+                  }
+                }
+                if (checkCon === false && dTokenInd.length > 0){
+                  checkCon = checkConnexion (actuelTokenInd, dTokenInd);
+                  if (checkCon === true ){
+                    actionCheckConnexionTrue( actTkObj,i,j);
+                  }
+                }
+                if (checkCon === false && lTokenInd.length > 0){
+                  checkCon = checkConnexion (actuelTokenInd, lTokenInd);
+                  if (checkCon === true ){
+                    actionCheckConnexionTrue( actTkObj,i,j);
+                  }    
+                }
+              }
+          }
+       }
+     // assign isCheck key value to true  
+    function actionCheckConnexionTrue( obj,a,b){
+      obj.isCheck = true ;
+      console.log("isCheck: "+ obj);
+      row = a;
+      col = b;
+    }         
 }
+
+// *******************************************************************************************************************
+// check connexion
+function checkConnexion(actTok, toCheckTok){
+  for (i = 0; i < actTok.length ; i++ ){
+     for (j = 0; j < toCheckTok.length; j++){
+       if ( actTok[i] === toCheckTok[j]){
+          return true;
+       }
+     }
+  }
+  return false;
+}
+// *******************************************************************************************************************
+// Bring back index array when position = true
+function getIndexTruePositionFromToken(tokenDirArr){
+  var directionIndexTrue = [];
+  if (tokenDirArr !== undefined) {
+    
+   for (var i = 0 ; i < tokenDirArr.length ; i++){
+      if (tokenDirArr[i] === true){
+        directionIndexTrue.push(i);
+      }
+    }
+  }
+   return directionIndexTrue ;      
+}
+
 
 
 function pathTrue(dir1, dir2){
