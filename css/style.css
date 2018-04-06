@@ -1,29 +1,75 @@
+
+body{
+
+}
+.container{  
+  height: 80vh;  
+  background-image : url("http://www.latourdupin.fr/wp-content/uploads/TIC-ET-SCIENCES-LE-COURANT-PASSE.jpg");
+  /* background-repeat: no-repeat;*/
+   margin-top : 100px;
+}
+
+.my-Container{
+  margin : 0 auto; 
+  width: 600px;  
+
+}
+h1{
+  text-transform:uppercase;
+    font-family: 'Cabin Condensed', sans-serif;
+    font-weight:bold;
+    font-size:50pt;
+    text-align:center;
+    color: rgb(54, 42, 39);
+    text-shadow : 5px 2px;
+}
 img,.col-sm-2{
   width:100px;
   height:100px;
 }
-
 .col-sm-2{
   border: 1px solid black;
-  padding: 1px;
-}/*
-#col0-row1{
-  transform: rotate(0deg);
+  padding: 2px;
 }
-#col1-row1{
-  transform: rotate(0deg);
-}
-#col1-row2{
-  transform: rotate(0deg);
-}*/
 
-.my-Container{
-  margin : 0 auto; 
-  width: 600px;
-}
 .row {
-  background-color : blue;
+  background-color : #68C999;
 }
 .btn-checkCircuit{
-  float : right;
+  float : right;  
+}
+
+#row1-col5{
+  border : 1px solid greenyellow;
+  background-color : greenyellow;
+  
+}
+#row2-col5 {  
+  border: 1px solid tomato;
+  background-color: tomato; 
+}
+
+#row1-col5, #row2-col5 {
+  display: none;
+  margin-left: 20px;
+  margin-top: 36px;
+  padding-top: 4px;
+  width: 100px;
+  height: 26px;
+
+}
+
+.btn, .btn-dark{
+  font-family: Arial,sans-serif;
+  font-size: 1.6em;
+  width: 1 00px;
+  height: 43px;
+  padding-top: 7px; /*permet le centrage vertical*/
+  text-align: center;
+  color: white;
+  /*color: rgb(82, 81, 29);*/
+  background: rgb(75, 71, 71);
+}
+.col-sm-1{
+  padding-top : 30px;  
 }

@@ -1,96 +1,117 @@
 
-$(".col-sm-2").on('click',function(){  
-  
-  var imgTarget = event.target;
-  var imgSelectedId = imgTarget.parentNode.id;
-  if (imgSelectedId != undefined){
-    var imgAlt = imgTarget.alt;
-    var idx = splitId(imgSelectedId);
-    console.log(myGrid[idx[0]][idx[1]]);
-    console.log(myGrid[idx[0]][idx[1]].name);
-    var gridAccessor = myGrid[idx[0]][idx[1]];
-    console.log(gridAccessor) ;
-    var newAngle = 0;
-    gridAccessor.angle += 90;
-    if (gridAccessor.angle === 360){
-        gridAccessor.angle = 0;          
-    }
-      switch (imgAlt){
-        case "Straight pipe": 
-        case "Yellow light": 
-          newAngle = gridAccessor.angle ;
-          console.log(newAngle);
-          if (gridAccessor.angle === 90 || gridAccessor.angle === 270) {
-            gridAccessor.dir = [false,true,false,true];
-          }
-          else 
-            gridAccessor.dir = [true,false,true,false];
-          break;
-        case "Left-Down pipe" :
-          newAngle = gridAccessor.angle ;
-          switch (newAngle){
-              case 90:
-                gridAccessor.dir = [true,false,false,true];
-                break;
-              case 180:
-                gridAccessor.dir = [true,true,false,false];
-                break;
-              case 270:
-                gridAccessor.dir = [false,true,true,false];
-                break;
-              default:
-                gridAccessor.dir = [false,false,true,true];
-          }
-          break;
-        case "Battery plus" :
-          newAngle = gridAccessor.angle ;
-          switch (newAngle){
-              case 90:
-                gridAccessor.dir = [false,false,false,true];
-                break;
-              case 180:
-                gridAccessor.dir = [true,false,false,false];
-                break;
-              case 270:
-                gridAccessor.dir = [false,true,false,false];
-                break;
-              default:
-                gridAccessor.dir = [false,false,false,true];
-          }
-          break;
-          case "Battery minus" :
-          newAngle = gridAccessor.angle ;
-          switch (newAngle){
-              case 90:
-                gridAccessor.dir = [true,false,false,false];
-                break;
-              case 180:
-                gridAccessor.dir = [false,true,false,false];
-                break;
-              case 270:
-                gridAccessor.dir = [false,false,true,false];
-                break;
-              default:
-                gridAccessor.dir = [false,false,false,true];
-          }
-          break;
+ // **********************************************************  Global Variables ****************************************************
+    var successResp = $('#row1-col5');
+    var falseResp = $('#row2-col5'); 
+    var nextObjInPathTrue = {};
 
-      }
-      $("#" + imgSelectedId).css('transform','rotate('+ newAngle + 'deg)' );
+    // direction : up - right - down - left
+var myGrid = [
+  [{  name : 'Battery plus',
+      angle : 0,
+      dir : [false,false,true,false],
+      row : 0,
+      col : 0,
+      isCheck : false}              ,'','','',''],
+  [{  name : 'Left-Down pipe',
+      angle : 0,
+      dir : [false,false,true,true],
+      row : 0,
+      col : 0,
+      isCheck : false},
+   { name : 'Straight pipe',
+      angle : 0,
+      dir : [true,false,true,false],
+      row : 0,
+      col : 0,
+      isCheck : false},
+  { name : 'Yellow light',
+      angle : 0,
+      dir : [true,false,true,false],
+      row : 0,
+      col : 0,
+      isCheck : false},
+  { name : 'Battery minus',
+      angle : 0,
+      dir : [false,false,false,true],
+      row : 0,
+      col : 0,
+      isCheck : false},                           ''],
+  ['',                               '',  '', '', ''],           
+  ['',                               '',  '', '', ''], 
+  ['',                               '',  '', '', '']
+]
+
+// ************************************************************ /Global Variables **************************************************** 
+
+// ************************************************************  Functions ************************************************************
+
+// set differents properties of the object clicked
+function rotateEventAction ( arr, imgAlt, newAngle, imgIdSelected) {  
+  switch (imgAlt){
+    case "Straight pipe": 
+    case "Yellow light": 
+      newAngle = arr.angle ;
       console.log(newAngle);
-      tokenDirection = gridAccessor.dir;  
-      console.log("tokenDirection:" +tokenDirection);
-      
-      var dir1 = myGrid[1][1].dir;
-      var dir2 = myGrid[0][0].dir;
-      
-    console.log(pathTrue(dir1, dir2))
+      if (arr.angle === 90 || arr.angle === 270) {
+        arr.dir = [false,true,false,true];
+      }
+      else 
+      arr.dir = [true,false,true,false];
+      break;
+    case "Left-Down pipe" :
+      newAngle = arr.angle ;
+      switch (newAngle){
+          case 90:
+          arr.dir = [true,false,false,true];
+            break;
+          case 180:
+          arr.dir = [true,true,false,false];
+            break;
+          case 270:
+          arr.dir = [false,true,true,false];
+            break;
+          default:
+          arr.dir = [false,false,true,true];
+      }
+      break;
+    case "Battery plus" :
+      newAngle = arr.angle ;
+      switch (newAngle){
+          case 90:
+          arr.dir = [false,false,false,true];
+            break;
+          case 180:
+          arr.dir = [true,false,false,false];
+            break;
+          case 270:
+          arr.dir = [false,true,false,false];
+            break;
+          default:
+          arr.dir = [false,false,true,false];
+      }
+      break;
+      case "Battery minus" :
+      newAngle = arr.angle ;
+      switch (newAngle){
+          case 90:
+          arr.dir = [true,false,false,false];
+            break;
+          case 180:
+          arr.dir = [false,true,false,false];
+            break;
+          case 270:
+          arr.dir = [false,false,true,false];
+            break;
+          default:
+          arr.dir = [false,false,false,true];
+      }
+      break;
+
   }
-  else
-    console.log ("Pas d'image");  
-});
- var  tokenDirection ;
-// ******************************************************************************************************************* 
+  $("#" + imgIdSelected).css('transform','rotate('+ newAngle + 'deg)' );
+      console.log(newAngle);  
+}
+// get the Id of the click on tocken
 function splitId(id){
   var idColRemove = id.split("col");
   var newId = idColRemove[0] + idColRemove[1];
@@ -99,38 +120,8 @@ function splitId(id){
   var newIdSplit = newId.split('-');
   return newIdSplit;
 }
-// direction : ip - right - down - left
-var myGrid = [
-                  [{  name : 'Battery plus',
-                      angle : 0,
-                      dir : [true,false,false,false],
-                      isCheck : false}              ,'','','',''],
-                  [{  name : 'Left-Down pipe',
-                      angle : 0,
-                      dir : [false,false,true,true],
-                      isCheck : false},
-                   { name : 'Straight pipe',
-                      angle : 0,
-                      dir : [true,false,true,false],
-                      isCheck : false},
-                  { name : 'Yellow light',
-                      angle : 0,
-                      dir : [true,false,true,false],
-                      isCheck : false},
-                  { name : 'Battery minus',
-                      angle : 0,
-                      dir : [false,false,false,true],
-                      isCheck : false},                           ''],
-                  ['',                               '',  '', '', ''],           
-                  ['',                               '',  '', '', ''], 
-                  ['',                               '',  '', '', '']
-              ]
 
-$('#btn-checkCircuit').on('click',function () {
-  manageConnexion(myGrid);
-})
-function manageConnexion(gridArr){
-   
+function manageConnexion(gridArr){   
   var actTkObj = {},  uTkObj = {}, rTkObj ={}, dTkObj = {}; lTkObj = {} ;
   var actuelTokenInd = [], uTokenInd = [], rTokenInd = [], dTokenInd =[], lTokenInd = [];
   // -----------------------------------------------------------------------------------------------------------------
@@ -150,6 +141,7 @@ function manageConnexion(gridArr){
     }
   // if not in grid then circuit false
   if (!findTkBm){
+    console.log("Pas de Lumière");
     return false;
   }   
   
@@ -170,161 +162,214 @@ function manageConnexion(gridArr){
   }
    // if not in grid then circuit false
    if (!findTkBp){
+    console.log("Pas de Lumière");
       return false;
     }
   
   // -----------------------------------------------------------------------------------------------------------------
-  var row = 0, col = 0;  
+ 
   // check side by side if connexion is true
-        for (var i = gridArr.length - 1; i >= 0 ; i--){      
-          for (var j = gridArr.length -1 ; j >= 0 ; j --){
-            var myGridArr = gridArr[i][j];
-              if ( myGridArr != '' && myGridArr.name === "Battery minus") {
-                actuelTokenInd = getIndexTruePositionFromToken (myGridArr.dir) ;
-                actTkObj = myGridArr
-                uTokenInd = getIndexTruePositionFromToken(gridArr[i-1][j].dir);    // above token
-                uTkObj = gridArr[i-1][j];
-                rTokenInd = getIndexTruePositionFromToken(gridArr[i][j+1].dir);    // right token
-                rTkObj = gridArr[i][j+1];
-                dTokenInd = getIndexTruePositionFromToken(gridArr[i+1][j].dir);    // down token
-                dTkObj = gridArr[i+1][j];
-                lTokenInd = getIndexTruePositionFromToken(gridArr[i][j-1].dir);     // left token
-                lTkObj = gridArr[i][j-1];
-                var checkCon = false;
-               if (uTokenInd.length > 0) {
-                  checkCon = checkConnexion (actuelTokenInd, uTokenInd);
-                  if (checkCon === true ){
-                    actionCheckConnexionTrue( actTkObj,i,j);
-                  }              
-                }
-                if (checkCon === false && rTokenInd.length > 0){
-                  checkCon = checkConnexion (actuelTokenInd, rTokenInd);
-                  if (checkCon === true ){
-                    actionCheckConnexionTrue( actTkObj,i,j);
-                  }
-                }
-                if (checkCon === false && dTokenInd.length > 0){
-                  checkCon = checkConnexion (actuelTokenInd, dTokenInd);
-                  if (checkCon === true ){
-                    actionCheckConnexionTrue( actTkObj,i,j);
-                  }
-                }
-                if (checkCon === false && lTokenInd.length > 0){
-                  checkCon = checkConnexion (actuelTokenInd, lTokenInd);
-                  if (checkCon === true ){
-                    actionCheckConnexionTrue( actTkObj,i,j);
-                  }    
-                }
-              }
+  for (var i = gridArr.length - 1; i >= 0 ; i--){      
+    for (var j = gridArr.length -1 ; j >= 0 ; j --){
+      var myGridArr = gridArr[i][j];
+        if ( myGridArr != '' && myGridArr.name === "Battery minus") {
+          actTkObj = myGridArr
+          setRowColInfos (actTkObj, i, j)
+          uTkObj = gridArr[i-1][j];
+          setRowColInfos (uTkObj, i-1 , j)
+          rTkObj = gridArr[i][j+1];
+          setRowColInfos (rTkObj, i, j+1 )
+          dTkObj = gridArr[i+1][j];
+          setRowColInfos (dTkObj, i + 1, j )
+          lTkObj = gridArr[i][j-1];
+          setRowColInfos (lTkObj, i, j-1 )          
+          
+          var checkCon = false;          
+          var checkConUp = checkConnexion (actTkObj, uTkObj, 'Check-Up');
+          var checkConR = checkConnexion (actTkObj, rTkObj, 'Check-Rigth');
+          var checkConD = checkConnexion (actTkObj, dTkObj, 'Check-Down');
+          var checkConL = checkConnexion (actTkObj, lTkObj, 'Check-Left');          
+          if ( checkConUp === true || checkConR === true || checkConD === true || checkConL === true ) {
+            checkCon = true;
           }
-       }
-     // assign isCheck key value to true  
-    function actionCheckConnexionTrue( obj,a,b){
-      obj.isCheck = true ;
-      console.log("isCheck: "+ obj);
-      row = a;
-      col = b;
-    }         
+          else
+          {
+            console.log(" Pas de Lumière");
+            showSuccesOrFailed(falseResp[0].id);
+            return false;            
+          }
+          if (proceedNextCheck(checkCon, gridArr)) {
+            console.log("SUCCESS");
+            return true;
+          }  
+          else 
+          console.log(" Pas de Lumière")
+          return false;
+        }
+    }
+  }  
+} 
+function setRowColInfos(objt, row, col){ 
+  if(objt !== undefined ){  
+    if ( Object.keys(objt).length !== 0 ) {
+      objt.row = row;
+      objt.col = col;
+    }    
+  }
 }
 
-// *******************************************************************************************************************
-// check connexion
-function checkConnexion(actTok, toCheckTok){
-  for (i = 0; i < actTok.length ; i++ ){
-     for (j = 0; j < toCheckTok.length; j++){
-       if ( actTok[i] === toCheckTok[j]){
-          return true;
-       }
-     }
-  }
-  return false;
-}
-// *******************************************************************************************************************
-// Bring back index array when position = true
-function getIndexTruePositionFromToken(tokenDirArr){
-  var directionIndexTrue = [];
-  if (tokenDirArr !== undefined) {
+function proceedNextCheck (checkCon, gridArr){  
+  var rw = 0, cl = 0;    
+  if (checkCon) {
+    while (checkCon === true){
+      checkCon = false;      
+      var actTkObj = nextObjInPathTrue;
+        if (actTkObj.name !== "Battery plus") {
+          rw = nextObjInPathTrue.row;
+          cl = nextObjInPathTrue.col;
+          var uTkObj = gridArr[rw -1][cl];
+          setRowColInfos (uTkObj, rw-1 , cl)
+          var rTkObj = gridArr[rw][cl+1];
+          setRowColInfos (rTkObj, rw, cl + 1 )
+          var dTkObj = gridArr[rw+1][cl];
+          setRowColInfos (dTkObj, rw + 1, cl )
+          var lTkObj = gridArr[rw][cl-1];
+          setRowColInfos (lTkObj, rw, cl-1 )  
+          var checkConUp = checkConnexion (actTkObj, uTkObj, 'Check-Up');
+          var checkConR = checkConnexion (actTkObj, rTkObj, 'Check-Rigth');
+          var checkConD = checkConnexion (actTkObj, dTkObj, 'Check-Down');
+          var checkConL = checkConnexion (actTkObj, lTkObj, 'Check-Left');
+          
+          if ( checkConUp === true || checkConR === true|| checkConD === true || checkConL === true){
+            checkCon = true;
+          }
+        }      
+    }
+  }  
+  if ( actTkObj.name !== 'Battery plus'){
+    resetIsCheckKey( myGrid);
+    showSuccesOrFailed(falseResp[0].id)
     
-   for (var i = 0 ; i < tokenDirArr.length ; i++){
-      if (tokenDirArr[i] === true){
-        directionIndexTrue.push(i);
-      }
+    return false;
+  }
+  else
+  { 
+    resetIsCheckKey(myGrid); 
+    showSuccesOrFailed(successResp[0].id)
+    return true;    
+  }  
+}
+
+function actionCheckConnexionFromWhileLoop(objt1 , objt2, filter){
+  if (objt2 !== undefined){
+    if ( Object.keys(objt2).length !== 0 && objt2.isCheck !== true){
+      checkCon = checkConnexion (objt1, objt2, filter);
     }
   }
-   return directionIndexTrue ;      
+}
+// check connexion ---- oject.dir = [Up, Right, Down, Left ]
+function checkConnexion(obj1, obj2, checkSide ){
+  if (obj2 !== undefined){
+      if ( Object.keys(obj2).length !== 0 && obj2.isCheck !== true){
+          var ind = 0;
+          switch (checkSide){                                         
+            case 'Check-Up':
+              if (obj1.dir[0] === true &&  obj2.dir[2] === true ){
+                actionIncheckConnexion (obj1, obj2);
+                return true; 
+              }
+              else
+              return false; 
+              break;
+            case 'Check-Rigth':
+              if (obj1.dir[1] === true &&  obj2.dir[3] === true ){
+                actionIncheckConnexion (obj1, obj2);
+                return true; 
+              }
+              else
+              return false; 
+              break;
+            case 'Check-Down':
+              if (obj1.dir[2] === true &&  obj2.dir[0] === true ){
+                actionIncheckConnexion (obj1, obj2);
+                return true; 
+              }
+              else
+              return false; 
+              break;
+              case 'Check-Left':
+              if (obj1.dir[3] === true &&  obj2.dir[1] === true ){
+                actionIncheckConnexion (obj1, obj2);
+                 return true; 
+              }
+              else
+              return false; 
+              break;
+              default:
+                return false;
+          }
+        }
+  }
+
+  function actionIncheckConnexion (ob1, ob2) {
+    ob1.isCheck = true;
+    nextObjInPathTrue = ob2;
+  }  
+}
+function resetIsCheckKey( arrGrid){
+  for (var i = arrGrid.length - 1; i >= 0 ; i--){      
+    for (var j = arrGrid.length -1 ; j >= 0 ; j --){
+        if ( arrGrid[i][j] !== '' ) {
+          arrGrid[i][j].isCheck = false;
+        }
+      }
+  }      
 }
 
-
-
-function pathTrue(dir1, dir2){
-  switch (dir1) {
-    case "UD":            
-      if (dir2 === "DL" || dir2 === "UD" || dir2 === "RD") {
-        return true;
-      }
-      else
-       return false;
-       break;
-    case "RL":    
-      if (dir2 === "UR" || dir2 === "RD" || dir2 === "RL"){
-        return true;
-      }
-      else
-       return false;
-       break;
-    case "LU":
-      if (dir2.includes("D")){
-        return true;
-      }
-      else
-       return false;
-        break;
-    case "DL":
-    case "RD":
-      if (dir2.includes("U")){
-        return true;
-      }
-      else
-       return false;    
+function showSuccesOrFailed(myId) {
+  if( myId === "row1-col5") {
+    $('#row1-col5').show();
+    $('#row2-col5').hide();
+  }
+  else
+  {
+    $('#row1-col5').hide();
+    $('#row2-col5').show();
   }
 }
 
+// **************************************************************** Functions ************************************************************
 
-
-
-/*
-function Token(angle,uBool, rBool, dBool, lBool, dir) {
-  this.connection = {
-                      U: uBool,
-                      R: rBool,
-                      D: dBool,
-                      L: lBool
-                    }
-  this.direction = dir;
-}
-
-function selectedTocken(alt,angle){
-  switch (alt){
-    case "straight pipe":
-      if (angle === 90 || angle === 270 ){
-        return new Tocken( true, true, false, false, "UD" );
-      }
-      else
-        return new Tocken( false, false, true, true, "LR" );
-    case "top-right pipe" :
-      switch (angle){
-        case 0:
-          return new Tocken( true, true, false, false, "UR" );
-          break;
-        case 90:
-          return new Tocken( false, true, false, true, "RD" );
-          break;
-        case 180:
-          return new Tocken( false, false, true, true, "DL" );
-          break;
-        case 270:
-          return new Tocken(angle, false, false, true, true, "LU" );
-          break;
-      }
+// **************************************************************** Actions ***************************************************
+// action when click on the token in the grid
+$(".col-sm-2").on('click',function(){  
+  successResp.hide();
+  falseResp.hide();
+  var imgTarget = event.target;
+  var imgSelectedId = imgTarget.parentNode.id;
+  if (imgSelectedId != undefined && imgSelectedId !== ''){
+    var imgAlt = imgTarget.alt;
+    var idx = splitId(imgSelectedId);
+    console.log(myGrid[idx[0]][idx[1]]);
+    console.log(myGrid[idx[0]][idx[1]].name);
+    var gridAccessor = myGrid[idx[0]][idx[1]];
+    console.log(gridAccessor) ;
+    var newAngle = 0;
+    gridAccessor.angle += 90;
+    if (gridAccessor.angle === 360){
+        gridAccessor.angle = 0;          
+    }  
+    rotateEventAction ( gridAccessor, imgAlt, newAngle, imgSelectedId) 
   }
-}*/
+  else
+    console.log ("Pas d'image");  
+});
+// action when click on the validate button 
+$('#btn-checkCircuit').on('click',function () {
+  manageConnexion(myGrid);
+})
+ // **************************************************************** /Actions ***********************************************
+
+
+
+
